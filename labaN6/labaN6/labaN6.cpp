@@ -1,20 +1,122 @@
-﻿// labaN6.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
+#include <string>
+#include <eh.h>
+#define CAPACITY 5
 
-#include <iostream>
+void My_Term();
+
+class StackException : public std::exception
+{
+public:
+	StackException(const char* Exception) :
+		std::exception(Exception)
+	{
+	}
+
+private:
+};
+
+template <typename type> class Stack
+{
+public:
+	Stack() :
+		_capacity(CAPACITY), _numberOfElement(-1)
+	{
+	}
+
+	~Stack()
+	{
+	}
+
+	bool IsEmpty()
+	{
+		return _numberOfElement < 0;
+	}
+
+	bool IsFull()
+	{
+		return _numberOfElement >= _capacity - 1;
+	}
+
+	void Push(type value)
+	{
+		if (IsFull())
+		{
+			throw StackException("Stack is Full");
+		}
+		_numberOfElement++;
+		Arr[_numberOfElement] = value;
+	}
+
+	int Size()
+	{
+		return _capacity;
+	}
+
+	type Pop()
+	{
+		if (IsEmpty())
+		{
+			throw StackException("Stack is Empty");
+		}
+		_numberOfElement--;
+		return Arr[_numberOfElement + 1];
+	}
+
+	bool operator==(const Stack& OtherStack)
+	{
+		return this->_capacity == OtherStack->_capacity;
+	}
+
+	bool operator!=(const Stack& OtherStack)
+	{
+		return this->_capacity != OtherStack->_capacity;
+	}
+
+private:
+	int _capacity;
+	int _numberOfElement;
+	type Arr[CAPACITY];
+};
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	set_terminate(My_Term);
+	Stack<char> MyStack1;
+
+	try
+	{
+		MyStack1.Pop();
+	}
+	catch (const std::exception& Exception)
+	{
+		std::cout << Exception.what() << std::endl;
+	}
+
+	MyStack1.Push('K');
+	MyStack1.Push('I');
+	MyStack1.Push('T');
+	MyStack1.Push('O');
+	MyStack1.Push('K');
+
+	try
+	{
+		MyStack1.Push('O');
+	}
+	catch (const StackException& Exception)
+	{
+		std::cout << Exception.what() << std::endl;
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		std::cout << MyStack1.Pop() << std::endl;
+	}
+	terminate();
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+void My_Term()
+{
+	std::cout << "The programm was terminated" << std::endl;
+	exit(-1);
+}
