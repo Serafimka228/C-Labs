@@ -1,0 +1,6 @@
+(()) - [Correct]
+()() - [Correct]
+)( - [Incorrect]
+ads - [Correct]
+sd( - [Incorrect]
+(()s) - [Correct]
